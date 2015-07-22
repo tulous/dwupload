@@ -24,6 +24,8 @@ return dwdav.delete(config.cartridge)
 		return del(config.cartridge + '.zip');
 	}).then(function () {
 		return dwdav.delete(config.cartridge + '.zip');
+	}).then(function () {
+		console.log('Done uploading cartridge ' + config.cartridge);
 	}).catch(function (err) {
 		throw err;
 	});

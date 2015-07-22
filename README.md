@@ -3,13 +3,13 @@
 
 ## Installation
 
-```sh
+```shell
 :; npm install bitbucket:demandware/dwupload
 ```
 
 ## Usage
 
-```sh
+```shell
 :; dwupload --hostname example.demandware.net --username admin --password password --cartridge app_storefront_core
 ```
 
@@ -32,3 +32,6 @@ Instead of passing command line options every single time, you can store your co
 ```
 
 Command line options will always override the options delcared in the config file.
+
+## TODO
+- Add the ability to upload individual file instead of the whole cartridge

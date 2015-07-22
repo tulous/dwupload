@@ -15,18 +15,18 @@ var conf = assign(config({
 }, 'dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
 
-return dwdav.delete(config.cartridge)
+return dwdav.delete(conf.cartridge)
 	.then(function () {
-		return exec('zip -r ' + config.cartridge + '.zip ' + config.cartridge);
+		return exec('zip -r ' + conf.cartridge + '.zip ' + conf.cartridge);
 	}).then(function () {
-		return dwdav.postAndUnzip(config.cartridge + '.zip');
+		return dwdav.postAndUnzip(conf.cartridge + '.zip');
 	}).then(function () {
-		return del(config.cartridge + '.zip');
+		return del(conf.cartridge + '.zip');
 	}).then(function () {
-		return dwdav.delete(config.cartridge + '.zip');
+		return dwdav.delete(conf.cartridge + '.zip');
 	}).then(function () {
-		console.log('Done uploading cartridge ' + config.cartridge);
+		console.log('Done uploading cartridge ' + conf.cartridge);
 	}).catch(function (err) {
-		throw err;
+		console.error(err);
 	});
 

@@ -7,6 +7,8 @@
 :; npm install bitbucket:demandware/dwupload
 ```
 
+*Note: this npm command above requires the lastest version of npm (or at least 2.x). If you do not have that, run `npm install -g npm` first.*
+
 ## Usage
 
 ```shell
@@ -21,7 +23,7 @@
 - `cartridge`: cartridge name, default to `app_storefront_core`
 
 ## Config file
-Instead of passing command line options every single time, you can store your config options in a `dw.json` file instead. For example:
+Instead of passing command line options every single time, you can store your config options in a `dw.json` file in the current working directory instead. For example:
 
 ```js
 {

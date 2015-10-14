@@ -23,10 +23,15 @@ var zipCartridgeName = cartridgeName + '.zip';
 
 return dwdav.delete(conf.cartridge)
 	.then(function () {
-		if (dirname !== '.') {
-			return exec('cd ' + dirname);
-		} else {
+		if (dirname == '.') {
 			return bluebird.resolve();
+		}
+		// change directory into dirname in order to create the correct zip archive
+		try {
+			process.chdir(dirname);
+			return bluebird.resolve();
+		} catch (err) {
+			return bluebird.reject(err);
 		}
 	}).then(function () {
 		return exec('zip -r ' + zipCartridgeName + ' ' + cartridgeName);
@@ -37,10 +42,15 @@ return dwdav.delete(conf.cartridge)
 	}).then(function () {
 		return dwdav.delete(zipCartridgeName);
 	}).then(function () {
-		if (dirname !== '.') {
-			return exec('cd ' + dirname);
-		} else {
+		if (dirname == '.') {
 			return bluebird.resolve();
+		}
+		// go back to cwd
+		try {
+			process.chdir(cwd);
+			return bluebird.resolve();
+		} catch (err) {
+			return bluebird.reject(err);
 		}
 	}).then(function () {
 		console.log('Done uploading cartridge: ' + conf.cartridge);

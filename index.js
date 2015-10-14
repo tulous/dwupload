@@ -16,17 +16,32 @@ var conf = assign(config({
 }, 'dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
 
-var zipCartridgeName = path.basename(conf.cartridge) + '.zip';
+var dirname = path.dirname(conf.cartridge);
+var cwd = process.cwd();
+var cartridgeName = path.basename(conf.cartridge);
+var zipCartridgeName = cartridgeName + '.zip';
 
 return dwdav.delete(conf.cartridge)
 	.then(function () {
-		return exec('zip -r ' + zipCartridgeName + ' ' + conf.cartridge);
+		if (dirname !== '.') {
+			return exec('cd ' + dirname);
+		} else {
+			return bluebird.resolve();
+		}
+	}).then(function () {
+		return exec('zip -r ' + zipCartridgeName + ' ' + cartridgeName);
 	}).then(function () {
 		return dwdav.postAndUnzip(zipCartridgeName);
 	}).then(function () {
 		return del(zipCartridgeName);
 	}).then(function () {
 		return dwdav.delete(zipCartridgeName);
+	}).then(function () {
+		if (dirname !== '.') {
+			return exec('cd ' + dirname);
+		} else {
+			return bluebird.resolve();
+		}
 	}).then(function () {
 		console.log('Done uploading cartridge: ' + conf.cartridge);
 	}).catch(function (err) {

@@ -21,7 +21,7 @@ var cwd = process.cwd();
 var cartridgeName = path.basename(conf.cartridge);
 var zipCartridgeName = cartridgeName + '.zip';
 
-dwdav.delete(conf.cartridge)
+dwdav.delete(cartridgeName)
 	.then(function () {
 		if (dirname === '.') {
 			return bluebird.resolve();

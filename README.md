@@ -20,7 +20,7 @@
 - `hostname`: sandbox URL (without the `https://`)
 - `username` and `password`: credentials to log into sandbox
 - `version`: default to `version1`
-- `cartridge`: cartridge name, default to `app_storefront_core`
+- `cartridge`: cartridge name, for e.g. `app_storefront_core`
 
 ## Config file
 Instead of passing command line options every single time, you can store your config options in a `dw.json` file in the current working directory instead. For example:

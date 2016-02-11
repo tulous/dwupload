@@ -11,9 +11,7 @@ var config = require('@tridnguyen/config');
 var path = require('path');
 
 var argv = minimist(process.argv.slice(2));
-var conf = assign(config({
-	cartridge: 'app_storefront_core'
-}, 'dw.json', {caller: false}), argv);
+var conf = assign(config('dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
 
 var dirname = path.dirname(conf.cartridge);

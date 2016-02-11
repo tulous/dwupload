@@ -14,7 +14,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/demandware/dwupload#readme",
   "dependencies": {
-    "@tridnguyen/config": "^2.2.2",
+    "@tridnguyen/config": "^2.3.1",
     "bluebird": "^2.9.34",
     "del": "^1.2.0",
     "dwdav": "bitbucket:demandware/dwdav",

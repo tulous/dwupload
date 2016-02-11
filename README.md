@@ -38,4 +38,4 @@ Instead of passing command line options every single time, you can store your co
 Command line options will always override the options delcared in the config file.
 
 ## TODO
-- Add the ability to upload individual file instead of the whole cartridge
+- Add a watcher to upload files automatically in the background on file changes

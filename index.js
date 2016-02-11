@@ -13,13 +13,35 @@ var path = require('path');
 var argv = minimist(process.argv.slice(2));
 var conf = assign(config('dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
+var isCartridge = Boolean(conf.cartridge);
+// having a cartridge flag will override file flag
+var toUploads = [].concat(isCartridge ? conf.cartridge : conf.file);
 
-var dirname = path.dirname(conf.cartridge);
-var cwd = process.cwd();
-var cartridgeName = path.basename(conf.cartridge);
-var zipCartridgeName = cartridgeName + '.zip';
+Promise.all(toUploads.map(isCartridge ? uploadCartridge : uploadFile))
+.then(function () {
+	console.log('Done!');
+	process.exit();
+}, function (err) {
+	console.error(err);
+	process.exit(1);
+});
 
-dwdav.delete(cartridgeName)
+function uploadFile (file) {
+	return dwdav.delete(file)
+	.then(function () {
+		return dwdav.post(file);
+	}).then(function () {
+		console.log('Uploaded file: ' + file);
+	});
+}
+
+function uploadCartridge (cartridge) {
+	var dirname = path.dirname(cartridge);
+	var cwd = process.cwd();
+	var cartridgeName = path.basename(cartridge);
+	var zipCartridgeName = cartridgeName + '.zip';
+
+	return dwdav.delete(cartridgeName)
 	.then(function () {
 		if (dirname === '.') {
 			return bluebird.resolve();
@@ -51,10 +73,7 @@ dwdav.delete(cartridgeName)
 			return bluebird.reject(err);
 		}
 	}).then(function () {
-		console.log('Done uploading cartridge: ' + conf.cartridge);
-		process.exit(0);
-	}).catch(function (err) {
-		console.error(err);
-		process.exit(1);
+		console.log('Uploaded cartridge: ' + cartridge);
 	});
+}
 

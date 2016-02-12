@@ -23,6 +23,7 @@
 - `version`: default to `version1`
 - `file`: path to file to upload to. This is best used at the parent directory of a cartridge.
 - `cartridge`: cartridge name, for e.g. `app_storefront_core`. If this option is used, any `file` declared will be ignored
+- `delete`: delete a file or cartridge
 
 ## Config file
 Instead of passing command line options every single time, you can store your config options in a `dw.json` file in the current working directory instead. For example:

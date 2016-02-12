@@ -14,10 +14,23 @@ var argv = minimist(process.argv.slice(2));
 var conf = assign(config('dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
 var isCartridge = Boolean(conf.cartridge);
+var isDelete = Boolean(conf.delete);
 // having a cartridge flag will override file flag
 var toUploads = [].concat(isCartridge ? conf.cartridge : conf.file);
 
-Promise.all(toUploads.map(isCartridge ? uploadCartridge : uploadFile))
+var action;
+
+if (isDelete) {
+	action = deleteFile;
+} else {
+	if (isCartridge) {
+		action = uploadCartridge;
+	} else {
+		action = uploadFile;
+	}
+}
+
+Promise.all(toUploads.map(action))
 .then(function () {
 	console.log('Done!');
 	process.exit();
@@ -25,6 +38,10 @@ Promise.all(toUploads.map(isCartridge ? uploadCartridge : uploadFile))
 	console.error(err);
 	process.exit(1);
 });
+
+function deleteFile (filePath) {
+	return dwdav.delete(filePath);
+}
 
 function uploadFile (file) {
 	return dwdav.delete(file)

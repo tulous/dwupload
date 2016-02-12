@@ -51,6 +51,12 @@ Object.keys(argv).forEach(function (prop) {
 		conf[prop] = dwjson[prop];
 	}
 });
+
+if (!conf.file && !conf.cartridge) {
+	console.error('Error: either a file or cartridge must be declared.');
+	process.exit(1);
+}
+
 var dwdav = require('dwdav')(conf);
 var isCartridge = Boolean(conf.cartridge);
 var command = argv._[0];

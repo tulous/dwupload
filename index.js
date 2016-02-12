@@ -7,10 +7,12 @@ var del = bluebird.promisify(require('del'));
 var exec = bluebird.promisify(require('child_process').exec);
 var config = require('@tridnguyen/config');
 var path = require('path');
+var watchr = require('watchr');
 
 var argv = require('yargs')
 .usage('Usage: $0 <command> [options]')
 .command('delete', 'Delete a file or cartridge')
+.command('watch', 'Watch for file changes')
 .options({
 	'file': {
 		alias: 'f',
@@ -37,7 +39,18 @@ var argv = require('yargs')
 .help('h')
 .alias('h', 'help')
 .argv;
-var conf = Object.assign({}, config('dw.json', {caller: false}), argv);
+var conf = {};
+var dwjson = config('dw.json', {caller: false});
+// manually iterating through config and argv to override them as
+// yargs instantiate options with `undefined`, which would overwrite
+// the values from dwjson
+Object.keys(argv).forEach(function (prop) {
+	if (argv[prop]) {
+		conf[prop] = argv[prop];
+	} else if (dwjson[prop]) {
+		conf[prop] = dwjson[prop];
+	}
+});
 var dwdav = require('dwdav')(conf);
 var isCartridge = Boolean(conf.cartridge);
 var command = argv._[0];
@@ -55,15 +68,38 @@ if (command === 'delete') {
 		action = uploadFile;
 	}
 }
-
-Promise.all(toUploads.map(action))
-.then(function () {
-	console.log('Done!');
-	process.exit();
-}, function (err) {
-	console.error(err);
-	process.exit(1);
-});
+if (command === 'watch') {
+	watchr.watch({
+		paths: toUploads,
+		ignoreHiddenFiles: true,
+		listener: function (changeType, filePath) {
+			switch (changeType) {
+			case 'update':
+			case 'create':
+				uploadFile(filePath)
+				.then(null, function (err) {
+					console.error(err);
+				});
+				break;
+			case 'delete':
+				deleteFile(filePath)
+				.then(null, function (err) {
+					console.error(err);
+				});
+				break;
+			}
+		}
+	});
+} else {
+	Promise.all(toUploads.map(action))
+	.then(function () {
+		console.log('Done!');
+		process.exit();
+	}, function (err) {
+		console.error(err);
+		process.exit(1);
+	});
+}
 
 function deleteFile (filePath) {
 	return dwdav.delete(filePath)
@@ -77,7 +113,7 @@ function uploadFile (file) {
 	.then(function () {
 		return dwdav.post(file);
 	}).then(function () {
-		console.log('Uploaded file: ' + file);
+		console.log('Successfully uploaded: ' + file);
 	});
 }
 

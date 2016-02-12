@@ -38,6 +38,9 @@ var argv = require('yargs')
 })
 .help('h')
 .alias('h', 'help')
+.version(function () {
+	return require('./package').version;
+})
 .argv;
 var conf = {};
 var dwjson = config('dw.json', {caller: false});

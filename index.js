@@ -5,22 +5,48 @@
 var bluebird = require('bluebird');
 var del = bluebird.promisify(require('del'));
 var exec = bluebird.promisify(require('child_process').exec);
-var assign = require('lodash.assign');
-var minimist = require('minimist');
 var config = require('@tridnguyen/config');
 var path = require('path');
 
-var argv = minimist(process.argv.slice(2));
-var conf = assign(config('dw.json', {caller: false}), argv);
+var argv = require('yargs')
+.usage('Usage: $0 <command> [options]')
+.command('delete', 'Delete a file or cartridge')
+.options({
+	'f': {
+		alias: 'file',
+		describe: 'File to upload/ delete'
+	},
+	'c': {
+		alias: 'cartridge',
+		describe: 'Cartridge to upload/ delete. If this option is used, any "file" declard will be ignored.'
+	},
+	'username': {
+		describe: 'Username to log into sandbox'
+	},
+	'password': {
+		describe: 'Password to log into sandbox'
+	},
+	'hostname': {
+		describe: 'Sandbox URL (without the "https://" prefix)'
+	},
+	'version': {
+		describe: 'Code version',
+		default: 'version1'
+	}
+})
+.help('h')
+.alias('h', 'help')
+.argv;
+var conf = Object.assign({}, config('dw.json', {caller: false}), argv);
 var dwdav = require('dwdav')(conf);
 var isCartridge = Boolean(conf.cartridge);
-var isDelete = Boolean(conf.delete);
+var command = argv._[0];
 // having a cartridge flag will override file flag
 var toUploads = [].concat(isCartridge ? conf.cartridge : conf.file);
 
 var action;
 
-if (isDelete) {
+if (command === 'delete') {
 	action = deleteFile;
 } else {
 	if (isCartridge) {
@@ -43,7 +69,7 @@ function deleteFile (filePath) {
 	return dwdav.delete(filePath)
 	.then(function () {
 		console.log('Successfully deleted: ' + filePath);
-	})
+	});
 }
 
 function uploadFile (file) {

@@ -19,7 +19,6 @@
     "del": "^1.2.0",
     "dwdav": "bitbucket:demandware/dwdav",
     "jszip": "^2.5.0",
-    "lodash.assign": "^3.2.0",
-    "minimist": "^1.1.1"
+    "yargs": "^3.32.0"
   }
 }

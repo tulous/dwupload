@@ -12,12 +12,12 @@ var argv = require('yargs')
 .usage('Usage: $0 <command> [options]')
 .command('delete', 'Delete a file or cartridge')
 .options({
-	'f': {
-		alias: 'file',
+	'file': {
+		alias: 'f',
 		describe: 'File to upload/ delete'
 	},
-	'c': {
-		alias: 'cartridge',
+	'cartridge': {
+		alias: 'c',
 		describe: 'Cartridge to upload/ delete. If this option is used, any "file" declard will be ignored.'
 	},
 	'username': {
@@ -120,6 +120,13 @@ function uploadCartridge (cartridge) {
 		}
 	}).then(function () {
 		console.log('Uploaded cartridge: ' + cartridge);
+	}, function (err) {
+		// delete local zip when there's an error with the upload
+		return del(zipCartridgeName)
+		.then(function () {
+			// pass the error along
+			bluebird.reject(err);
+		});
 	});
 }
 

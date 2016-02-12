@@ -40,7 +40,10 @@ Promise.all(toUploads.map(action))
 });
 
 function deleteFile (filePath) {
-	return dwdav.delete(filePath);
+	return dwdav.delete(filePath)
+	.then(function () {
+		console.log('Successfully deleted: ' + filePath);
+	})
 }
 
 function uploadFile (file) {

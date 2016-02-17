@@ -4,8 +4,10 @@
 ## Installation
 
 ```shell
-:; npm install bitbucket:demandware/dwupload
+:; npm install -g bitbucket:demandware/dwupload
 ```
+
+Instead of installing this as a global npm package, you can install it locally and access it as `./node_modules/.bin/dwupload`.
 
 *Note: this npm command above requires the lastest version of npm (or at least 2.x). If you do not have that, run `npm install -g npm` first.*
 

@@ -100,7 +100,11 @@ if (command === 'watch') {
 		}
 	});
 } else {
-	Promise.all(toUploads.map(action))
+	toUploads.reduce(function (acc, toUpload) {
+		return acc.then(function () {
+			return action(toUpload);
+		});
+	}, Promise.resolve())
 	.then(function () {
 		console.log('Done!');
 		process.exit();

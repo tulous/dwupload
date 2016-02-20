@@ -19,6 +19,7 @@
     "del": "^1.2.0",
     "dwdav": "bitbucket:demandware/dwdav",
     "jszip": "^2.5.0",
+    "sync-queue": "0.0.2",
     "watchr": "^2.4.13",
     "yargs": "^3.32.0"
   }

@@ -8,6 +8,7 @@ var exec = bluebird.promisify(require('child_process').exec);
 var config = require('@tridnguyen/config');
 var path = require('path');
 var watchr = require('watchr');
+var Queue = require('sync-queue');
 
 var argv = require('yargs')
 .usage('Usage: $0 <command> [options]')
@@ -78,6 +79,7 @@ if (command === 'delete') {
 	}
 }
 if (command === 'watch') {
+	var queue = new Queue();
 	watchr.watch({
 		paths: toUploads,
 		ignoreHiddenFiles: true,
@@ -85,15 +87,25 @@ if (command === 'watch') {
 			switch (changeType) {
 			case 'update':
 			case 'create':
-				uploadFile(filePath)
-				.then(null, function (err) {
-					console.error(err);
+				queue.place(function () {
+					uploadFile(filePath)
+					.then(function () {
+						queue.next();
+					}, function (err) {
+						console.error(err);
+						queue.next();
+					});
 				});
 				break;
 			case 'delete':
-				deleteFile(filePath)
-				.then(null, function (err) {
-					console.error(err);
+				queue.place(function () {
+					deleteFile(filePath)
+					.then(function () {
+						queue.next();
+					}, function (err) {
+						console.error(err);
+						queue.next();
+					});
 				});
 				break;
 			}
@@ -178,4 +190,3 @@ function uploadCartridge (cartridge) {
 		});
 	});
 }
-

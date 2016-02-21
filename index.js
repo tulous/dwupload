@@ -24,12 +24,15 @@ var argv = require('yargs')
 		describe: 'Cartridge to upload/ delete. If this option is used, any "file" declard will be ignored.'
 	},
 	'username': {
+		alias: 'u',
 		describe: 'Username to log into sandbox'
 	},
 	'password': {
+		alias: 'p',
 		describe: 'Password to log into sandbox'
 	},
 	'hostname': {
+		alias: 'h',
 		describe: 'Sandbox URL (without the "https://" prefix)'
 	},
 	'version': {

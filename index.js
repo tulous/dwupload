@@ -189,7 +189,7 @@ function uploadCartridge (cartridge) {
 		return del(zipCartridgeName)
 		.then(function () {
 			// pass the error along
-			bluebird.reject(err);
+			return bluebird.reject(err);
 		});
 	});
 }

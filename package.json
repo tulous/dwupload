@@ -1,6 +1,6 @@
 {
   "name": "dwupload",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Upload storefront cartridges to Demandware WebDAV server",
   "main": "index.js",
   "bin": {

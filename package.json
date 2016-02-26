@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/demandware/dwupload.git"
+    "url": "git+https://github.com/tulous/dwupload.git"
   },
   "author": "Tri Nguyen",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/demandware/dwupload#readme",
+  "homepage": "https://github.com/tulous/dwupload.git#readme",
   "dependencies": {
     "@tridnguyen/config": "^2.3.1",
     "bluebird": "^2.9.34",
     "del": "^1.2.0",
-    "dwdav": "bitbucket:demandware/dwdav",
+    "dwdav": "github:tulous/dwdav",
     "jszip": "^2.5.0",
     "sync-queue": "0.0.2",
     "watchr": "^2.4.13",
